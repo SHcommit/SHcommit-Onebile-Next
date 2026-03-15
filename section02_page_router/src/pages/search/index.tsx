@@ -1,16 +1,25 @@
-import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import SearchableLayout from "@/components/searchable-layout";
-import books from "@/mock/books.json";
 import BookItem from "@/components/book-item";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import fetchBooks from "@/lib/fetch-books";
 
-/// 브라우저에서 localhost:3000 인덱스 경로로 인덱스 페이지를 요청해서, 
-/// Next서버가 사전 렌더링을 하게될 때
-export const getServerSideProps = ()=> {
+/// context라는 매개변수에는 현재 브라우저로부터 받은 요청에 대한 모든 정보가 다 포함되어 있다.
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const q = context.query.q;
+  const books = await fetchBooks(q as string);
+  return {
+    props: {
+      books,
+    },
+  };
+};
 
-}
-
-export default function Page() {
+export default function Page(
+  {books}: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
   return (
     <div>
       {books.map((book) => (
