@@ -5,13 +5,13 @@ import BookItem from "@/components/book-item";
 // 삐빅 오류입니다.
 //import "./index.css";
 
-import { InferGetServerSidePropsType } from "next";
+import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-randomBooks";
 
 /// 브라우저에서 localhost:3000 인덱스 경로로 인덱스 페이지를 요청해서,
 /// Next서버가 사전 렌더링을 하게될 때
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const [allBooks, recoBooks] = await Promise.all([
     fetchBooks(),
     fetchRandomBooks(),
@@ -28,7 +28,7 @@ export const getServerSideProps = async () => {
 export default function Home({
   allBooks,
   recoBooks,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className={style.container}>
       <section>
