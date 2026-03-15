@@ -7,7 +7,7 @@ export default async function handler(
   try {
     await response.revalidate("/");
     return response.json({ revalidate: true });
-  } catch (err) {
+  } catch {
     response.status(500).send("revalidation failed");
   }
 }
