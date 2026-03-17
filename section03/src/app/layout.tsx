@@ -9,9 +9,13 @@ import { BookData } from "@/types";
 /// 상당히 비효율적인건데
 /// Next에서는 Request memoization을 지원해주기 때문에 괜찮다.
 /// 각각의 렌더링될 때 호출했던 url의 response를 캐싱해주기 때문임 : )
+
+/// 서버렌더링임 => 다이내믹
+/// 이거 하나때문에!
 async function Footer() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
+    { cache: "force-cache" },
   );
   if (!response.ok) return <footer>제작 @Seung-Hyun, Yang</footer>;
   const books: BookData[] = await response.json();

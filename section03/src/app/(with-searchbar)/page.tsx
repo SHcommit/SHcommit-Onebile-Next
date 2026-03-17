@@ -3,10 +3,13 @@ import style from "./page.module.css";
 import books from "@/mock/books.json";
 import { BookData } from "@/types";
 
+/// fetch -> 캐싱안하니까 dynamic페이지로 되버림.
+/// 도서 정보를 force-cache로 바꿔줘보자 데이터가 한정되어이싿 가정하면!
+/// 그럼 스태틱 페이지로 작동됨 !! 
 async function AllBooks() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
-    { cache: "no-store" },
+    { cache: "force-cache" },
   );
   if (!response.ok) return <div>오류가 발생했습니다 ...</div>;
   const allBooks: BookData[] = await response.json();
