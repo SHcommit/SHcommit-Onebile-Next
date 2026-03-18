@@ -1,6 +1,8 @@
 import BookItem from "@/components/book-item";
 import style from "./page.module.css";
 import { BookData } from "@/types";
+import { delay } from "@/util/delay";
+import { Suspense } from "react";
 
 /// 특정 페이지의 유형을 강제로 static, dynamic으로 설정해주는기능
 /// 이를 사용하면 페이지 내부 동적 함수나 데이터 캐시 유무를 떠나서 강제로
@@ -15,11 +17,11 @@ import { BookData } from "@/types";
 /// 빌드 오류 내보냄
 /// export const dynamic = 'auto'
 
-
 /// fetch -> 캐싱안하니까 dynamic페이지로 되버림.
 /// 도서 정보를 force-cache로 바꿔줘보자 데이터가 한정되어이싿 가정하면!
-/// 그럼 스태틱 페이지로 작동됨 !! 
+/// 그럼 스태틱 페이지로 작동됨 !!
 async function AllBooks() {
+  await delay(1500);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
     { cache: "force-cache" },
@@ -30,6 +32,7 @@ async function AllBooks() {
 }
 
 async function RecoBooks() {
+  await delay(3000);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
     { cache: "force-cache" },
@@ -44,11 +47,15 @@ export default async function Home() {
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        <RecoBooks />
+        <Suspense fallback={<div>도서를 불러오는 중이에욤 ...</div>}>
+          <RecoBooks />
+        </Suspense>
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        <AllBooks />
+        <Suspense fallback={<div>도서를 불러오는 중이에욤 ...</div>}>
+          <AllBooks />
+        </Suspense>
       </section>
     </div>
   );
