@@ -17,6 +17,7 @@ export function generateStaticParams() {
 async function BookDetail({ bookId }: { bookId: string }) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`,
+    { next: { tags: [`review-${bookId}`] } },
   );
   if (!response.ok) {
     /// 낫 파운드 규칙 not-found.tsx

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 /// api가 자동으로 생성됨 !
 
@@ -28,7 +28,8 @@ export async function createReviewAction(formData: FormData) {
       },
     );
     console.log(response.status);
-    revalidatePath(`/book/${bookId}`);
+    // revalidatePath(`/book/${bookId}`);
+    revalidateTag(`review-${bookId}`, "default");
   } catch (err) {
     console.log(err);
     return;
