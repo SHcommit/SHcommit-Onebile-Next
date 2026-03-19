@@ -1,4 +1,7 @@
 "use server";
+
+import { revalidatePath } from "next/cache";
+
 /// api가 자동으로 생성됨 !
 
 /// useServer는 함수 맨 위로.
@@ -25,6 +28,7 @@ export async function createReviewAction(formData: FormData) {
       },
     );
     console.log(response.status);
+    revalidatePath(`/book/${bookId}`);
   } catch (err) {
     console.log(err);
     return;
