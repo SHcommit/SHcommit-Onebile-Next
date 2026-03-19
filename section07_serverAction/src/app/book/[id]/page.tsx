@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
-import { createReviewAction } from "@/actions/createReview.action";
+import { ReviewData } from "@/types";
+import ReviewItem from "@/components/reviewItem";
+import ReviewEditor from "@/components/ReviewEditor";
 
 /// 북페이지는 기본적으로 다이내믹 페이지다.
 /// 스태틱으로 만들기 위해서 가능한 경로들을 알려주면 된다.
@@ -46,16 +48,21 @@ async function BookDetail({ bookId }: { bookId: string }) {
   );
 }
 
-function ReviewEditor({ bookId }: { bookId: string }) {
+async function ReviewList({ withBookId }: { withBookId: string }) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${withBookId}`,
+  );
+
+  if (!response.ok)
+    throw new Error(`review fetch failed: ${response.statusText}`);
+
+  const reviews: ReviewData[] = await response.json();
+
   return (
     <section>
-      <form action={createReviewAction}>
-        {/** 인풋에서 북 아이디는 안보이게! hidden + readOnly */}
-        <input name="bookId" value={bookId} hidden readOnly />
-        <input required name="content" placeholder="리뷰 내용" />
-        <input required name="author" placeholder="작성자" />
-        <button type="submit"> 작성하기</button>
-      </form>
+      {reviews.map((review) => (
+        <ReviewItem key={`review-item-${review.id}`} {...review} />
+      ))}
     </section>
   );
 }
@@ -70,6 +77,7 @@ export default async function Page({
     <div className={style.container}>
       <BookDetail bookId={id} />
       <ReviewEditor bookId={id} />
+      <ReviewList withBookId={id} />
     </div>
   );
 }
