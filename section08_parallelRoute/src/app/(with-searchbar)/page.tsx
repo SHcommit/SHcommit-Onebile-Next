@@ -1,7 +1,6 @@
 import BookItem from "@/components/book-item";
 import style from "./page.module.css";
 import { BookData } from "@/types";
-import { delay } from "@/util/delay";
 import { Suspense } from "react";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 import { Metadata } from "next";
@@ -23,7 +22,6 @@ import { Metadata } from "next";
 /// 도서 정보를 force-cache로 바꿔줘보자 데이터가 한정되어이싿 가정하면!
 /// 그럼 스태틱 페이지로 작동됨 !!
 async function AllBooks() {
-  await delay(1500);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
     { cache: "force-cache" },
@@ -34,7 +32,6 @@ async function AllBooks() {
 }
 
 async function RecoBooks() {
-  await delay(3000);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
     { cache: "force-cache" },
@@ -56,20 +53,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
+export default function Home() {
   return (
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        <Suspense fallback={<BookListSkeleton withCount={3} />}>
-          <RecoBooks />
-        </Suspense>
+        {/* <Suspense fallback={<BookListSkeleton withCount={3} />}> */}
+        <RecoBooks />
+        {/* </Suspense> */}
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        <Suspense fallback={<BookListSkeleton withCount={7} />}>
-          <AllBooks />
-        </Suspense>
+        {/* <Suspense fallback={<BookListSkeleton withCount={7} />}> */}
+        <AllBooks />
+        {/* </Suspense> */}
       </section>
     </div>
   );
