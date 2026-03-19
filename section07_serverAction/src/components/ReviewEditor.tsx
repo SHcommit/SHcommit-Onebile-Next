@@ -2,13 +2,18 @@
 
 import style from "./ReviewEditor.module.css";
 import { createReviewAction } from "@/actions/createReview.action";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 
 export default function ReviewEditor({ bookId }: { bookId: string }) {
   const [state, formAction, isPending] = useActionState(
     createReviewAction,
     null,
   );
+  useEffect(() => {
+    if (state && !state.status) {
+      alert(state.console.error());
+    }
+  }, [state]);
 
   return (
     <section>
