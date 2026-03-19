@@ -1,5 +1,6 @@
 import { ReviewData } from "@/types";
 import style from "./reviewItem.module.css";
+import ReviewItemDeleteButton from "./reviewItemDeleteButton";
 
 export default function ReviewItem({
   id,
@@ -14,7 +15,9 @@ export default function ReviewItem({
       <div className={style.content}>{content}</div>
       <div className={style.bottomContainer}>
         <div className={style.date}>{new Date(createdAt).toLocaleString()}</div>
-        <div className={style.deleteButton}>삭제하기</div>
+        <div className={style.deleteButton}>
+          <ReviewItemDeleteButton reviewId={id} bookId={bookId} />
+        </div>
       </div>
     </div>
   );
