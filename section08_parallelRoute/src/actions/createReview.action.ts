@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
-import { delay } from "@/util/delay";
+// import { delay } from "@/util/delay";
 
 /// api가 자동으로 생성됨 !
 
@@ -20,7 +20,7 @@ export async function createReviewAction(_: any, formData: FormData) {
   }
 
   try {
-    await delay(2000);
+    // await delay(2000);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`,
       {
