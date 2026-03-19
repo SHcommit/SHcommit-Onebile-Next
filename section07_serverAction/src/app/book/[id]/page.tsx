@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
+import { createReviewAction } from "@/actions/createReview.action";
 
 /// 북페이지는 기본적으로 다이내믹 페이지다.
 /// 스태틱으로 만들기 위해서 가능한 경로들을 알려주면 된다.
@@ -11,15 +12,9 @@ export function generateStaticParams() {
   return [{ id: "1" }, { id: "2" }, { id: "3" }];
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
+async function BookDetail({ bookId }: { bookId: string }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`,
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`,
   );
   if (!response.ok) {
     /// 낫 파운드 규칙 not-found.tsx
@@ -34,7 +29,7 @@ export default async function Page({
   const { title, subTitle, description, author, publisher, coverImgUrl } = data;
 
   return (
-    <div className={style.container}>
+    <section>
       <div
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${coverImgUrl}')` }}
@@ -47,6 +42,34 @@ export default async function Page({
         {author} | {publisher}
       </div>
       <div className={style.description}>{description}</div>
+    </section>
+  );
+}
+
+function ReviewEditor({ bookId }: { bookId: string }) {
+  return (
+    <section>
+      <form action={createReviewAction}>
+        {/** 인풋에서 북 아이디는 안보이게! hidden + readOnly */}
+        <input name="bookId" value={bookId} hidden readOnly />
+        <input required name="content" placeholder="리뷰 내용" />
+        <input required name="author" placeholder="작성자" />
+        <button type="submit"> 작성하기</button>
+      </form>
+    </section>
+  );
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return (
+    <div className={style.container}>
+      <BookDetail bookId={id} />
+      <ReviewEditor bookId={id} />
     </div>
   );
 }
