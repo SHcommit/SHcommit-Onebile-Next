@@ -36,6 +36,7 @@ const ___metadata: any = {
 
 /// 이 방식을 써야함
 /// 현재 페이지에 메타데이터를 동적으로 생성함
+// 동적
 export async function generateMetadata({
   searchParams,
 }: {
