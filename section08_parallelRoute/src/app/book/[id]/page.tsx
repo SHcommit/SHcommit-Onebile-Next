@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
-import { ReviewData } from "@/types";
+import { BookData, ReviewData } from "@/types";
 import ReviewItem from "@/components/reviewItem";
 import ReviewEditor from "@/components/ReviewEditor";
 
@@ -66,6 +66,37 @@ async function ReviewList({ withBookId }: { withBookId: string }) {
       ))}
     </section>
   );
+}
+
+/// 이 페이지 또한 동적으로 메타데이터 생성
+// 현재 도서의 상세 정보도 받아오면 좋을 것임
+// 한 페이지에서 api 중복 호출해도 next내부에서는 최적화해줌 중복 호출 api에 대해서
+// 리퀘스트 메모이제이션
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`,
+    {
+      cache: "force-cache",
+    },
+  );
+
+  if (!response.ok) throw new Error(response.statusText);
+  const book: BookData = await response.json();
+
+  return {
+    title: `${book.title} - 한입북스`,
+    description: `${book.description}`,
+    openGraph: {
+      title: `${book.title} - 한입북스`,
+      description: `${book.description}`,
+      iamges: [book.coverImgUrl],
+    },
+  };
 }
 
 export default async function Page({

@@ -1,9 +1,9 @@
 import BookItem from "@/components/book-item";
 import style from "./page.module.css";
 import { BookData } from "@/types";
-import { delay } from "@/util/delay";
 import { Suspense } from "react";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
+import { Metadata } from "next";
 
 /// 특정 페이지의 유형을 강제로 static, dynamic으로 설정해주는기능
 /// 이를 사용하면 페이지 내부 동적 함수나 데이터 캐시 유무를 떠나서 강제로
@@ -22,7 +22,6 @@ import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 /// 도서 정보를 force-cache로 바꿔줘보자 데이터가 한정되어이싿 가정하면!
 /// 그럼 스태틱 페이지로 작동됨 !!
 async function AllBooks() {
-  await delay(1500);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
     { cache: "force-cache" },
@@ -33,7 +32,6 @@ async function AllBooks() {
 }
 
 async function RecoBooks() {
-  await delay(3000);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
     { cache: "force-cache" },
@@ -43,20 +41,32 @@ async function RecoBooks() {
   return recoBooks.map((book) => <BookItem key={book.id} {...book} />);
 }
 
-export default async function Home() {
+/// 이 페이지에 대한 메타데이타가 인덱스에 자동으로 적용됨 헤더에붙을듯함
+/// 이 변수에 저장된 값이 현 페이지의 메타 데이터로 설정된다.
+export const metadata: Metadata = {
+  title: "한입 북스",
+  description: "한입 북스에 등록된 도서를 만나보세요~",
+  openGraph: {
+    title: "한입 북스",
+    description: "한입 북스에 등록된 도서를 만나보세요",
+    images: ["/thumbnail.png"],
+  },
+};
+
+export default function Home() {
   return (
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        <Suspense fallback={<BookListSkeleton withCount={3} />}>
-          <RecoBooks />
-        </Suspense>
+        {/* <Suspense fallback={<BookListSkeleton withCount={3} />}> */}
+        <RecoBooks />
+        {/* </Suspense> */}
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        <Suspense fallback={<BookListSkeleton withCount={7} />}>
-          <AllBooks />
-        </Suspense>
+        {/* <Suspense fallback={<BookListSkeleton withCount={7} />}> */}
+        <AllBooks />
+        {/* </Suspense> */}
       </section>
     </div>
   );

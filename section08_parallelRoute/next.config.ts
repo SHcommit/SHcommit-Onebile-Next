@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
       fullUrl: true,
     },
   },
+  images: {
+    domains: ["shopping-phinf.pstatic.net"],
+  },
 };
 
 export default nextConfig;
+
