@@ -4,6 +4,7 @@ import { BookData } from "@/types";
 import { delay } from "@/util/delay";
 import { Suspense } from "react";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
+import { Metadata } from "next";
 
 /// 특정 페이지의 유형을 강제로 static, dynamic으로 설정해주는기능
 /// 이를 사용하면 페이지 내부 동적 함수나 데이터 캐시 유무를 떠나서 강제로
@@ -42,6 +43,18 @@ async function RecoBooks() {
   const recoBooks: BookData[] = await response.json();
   return recoBooks.map((book) => <BookItem key={book.id} {...book} />);
 }
+
+/// 이 페이지에 대한 메타데이타가 인덱스에 자동으로 적용됨 헤더에붙을듯함
+/// 이 변수에 저장된 값이 현 페이지의 메타 데이터로 설정된다.
+export const metadata: Metadata = {
+  title: "한입 북스",
+  description: "한입 북스에 등록된 도서를 만나보세요~",
+  openGraph: {
+    title: "한입 북스",
+    description: "한입 북스에 등록된 도서를 만나보세요",
+    images: ["/thumbnail.png"],
+  },
+};
 
 export default async function Home() {
   return (
